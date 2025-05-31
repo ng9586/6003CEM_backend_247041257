@@ -5,16 +5,18 @@ import { generateToken } from '../utils/jwt';
 
 const SIGN_UP_CODE = process.env.SIGN_UP_CODE || 'agency2025';
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response): Promise<void> => {
   const { email, password, signUpCode } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: 'Email already registered' });
+    if (existingUser) {
+      res.status(400).json({ message: 'Email already registered' });
+      return;
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const role = signUpCode === SIGN_UP_CODE ? 'operator' : 'user';
-
     const user = new User({ email, password: hashedPassword, role });
     await user.save();
 
@@ -25,15 +27,21 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!user) {
+      res.status(400).json({ message: 'Invalid credentials' });
+      return;
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!isMatch) {
+      res.status(400).json({ message: 'Invalid credentials' });
+      return;
+    }
 
     const token = generateToken({ userId: user._id, role: user.role });
     res.status(200).json({ token, role: user.role });
