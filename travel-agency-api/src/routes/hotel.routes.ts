@@ -6,17 +6,11 @@ import {
   deleteHotel
 } from '../controllers/hotel.controller';
 
-import { authMiddleware } from '../middlewares/auth.middleware';
-import { requireOperator } from '../middlewares/role.middleware';
-
 const router = Router();
 
-// Public
 router.get('/', getHotels);
-
-// Operator only
-router.post('/', authMiddleware, requireOperator, createHotel);
-router.put('/:id', authMiddleware, requireOperator, updateHotel);
-router.delete('/:id', authMiddleware, requireOperator, deleteHotel);
+router.post('/', createHotel);
+router.put('/:id', updateHotel);
+router.delete('/:id', deleteHotel);
 
 export default router;

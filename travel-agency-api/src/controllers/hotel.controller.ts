@@ -1,47 +1,59 @@
 import { Request, Response } from 'express';
 import { Hotel } from '../models/hotel.model';
 
-export const getHotels = async (req: Request, res: Response) => {
-  const { location, minPrice, maxPrice } = req.query;
-
-  const filter: any = {};
-
-  if (location) filter.location = location;
-  if (minPrice) filter.price = { ...filter.price, $gte: Number(minPrice) };
-  if (maxPrice) filter.price = { ...filter.price, $lte: Number(maxPrice) };
-
-  const hotels = await Hotel.find(filter);
-  res.json(hotels);
+export const getHotels = async (_req: Request, res: Response) => {
+  try {
+    const hotels = await Hotel.find();
+    res.json(hotels);
+  } catch (err) {
+    res.status(500).json({ message: '載入酒店失敗', error: err });
+  }
 };
 
 export const createHotel = async (req: Request, res: Response) => {
+  const { name, location, price, description } = req.body;
+
+  if (!name || !location || !price) {
+    return res.status(400).json({ message: '請填寫所有必要欄位' });
+  }
+
   try {
-    const hotel = new Hotel(req.body);
+    const hotel = new Hotel({ name, location, price, description });
     await hotel.save();
     res.status(201).json(hotel);
   } catch (err) {
-    res.status(400).json({ message: 'Invalid data', error: err });
+    res.status(500).json({ message: '新增酒店失敗', error: err });
   }
 };
 
 export const updateHotel = async (req: Request, res: Response) => {
   const { id } = req.params;
+  const { name, location, price, description } = req.body;
+
   try {
-    const hotel = await Hotel.findByIdAndUpdate(id, req.body, { new: true });
-    if (!hotel) return res.status(404).json({ message: 'Hotel not found' });
-    res.json(hotel);
+    const updated = await Hotel.findByIdAndUpdate(
+      id,
+      { name, location, price, description },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ message: '找不到該酒店' });
+
+    res.json(updated);
   } catch (err) {
-    res.status(400).json({ message: 'Invalid update data', error: err });
+    res.status(500).json({ message: '更新酒店失敗', error: err });
   }
 };
 
 export const deleteHotel = async (req: Request, res: Response) => {
   const { id } = req.params;
+
   try {
-    const hotel = await Hotel.findByIdAndDelete(id);
-    if (!hotel) return res.status(404).json({ message: 'Hotel not found' });
-    res.json({ message: 'Hotel deleted' });
+    const deleted = await Hotel.findByIdAndDelete(id);
+    if (!deleted) return res.status(404).json({ message: '找不到該酒店' });
+
+    res.json({ message: '酒店已刪除' });
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err });
+    res.status(500).json({ message: '刪除酒店失敗', error: err });
   }
 };
