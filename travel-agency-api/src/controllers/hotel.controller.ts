@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Hotel } from '../models/hotel.model';
 
-export const getHotels = async (_req: Request, res: Response) => {
+export const getHotels = async (req: Request, res: Response): Promise<void> => {
   try {
     const hotels = await Hotel.find();
     res.json(hotels);
@@ -10,11 +10,12 @@ export const getHotels = async (_req: Request, res: Response) => {
   }
 };
 
-export const createHotel = async (req: Request, res: Response) => {
+export const createHotel = async (req: Request, res: Response): Promise<void> => {
   const { name, location, price, description } = req.body;
 
   if (!name || !location || !price) {
-    return res.status(400).json({ message: '請填寫所有必要欄位' });
+    res.status(400).json({ message: '請填寫所有必要欄位' });
+    return;
   }
 
   try {
@@ -26,7 +27,7 @@ export const createHotel = async (req: Request, res: Response) => {
   }
 };
 
-export const updateHotel = async (req: Request, res: Response) => {
+export const updateHotel = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const { name, location, price, description } = req.body;
 
@@ -37,7 +38,10 @@ export const updateHotel = async (req: Request, res: Response) => {
       { new: true }
     );
 
-    if (!updated) return res.status(404).json({ message: '找不到該酒店' });
+    if (!updated) {
+      res.status(404).json({ message: '找不到該酒店' });
+      return;
+    }
 
     res.json(updated);
   } catch (err) {
@@ -45,12 +49,15 @@ export const updateHotel = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteHotel = async (req: Request, res: Response) => {
+export const deleteHotel = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
 
   try {
     const deleted = await Hotel.findByIdAndDelete(id);
-    if (!deleted) return res.status(404).json({ message: '找不到該酒店' });
+    if (!deleted) {
+      res.status(404).json({ message: '找不到該酒店' });
+      return;
+    }
 
     res.json({ message: '酒店已刪除' });
   } catch (err) {
