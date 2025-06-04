@@ -4,9 +4,12 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
+import path from 'path';
 
+// 路由
 import authRoutes from './routes/auth.routes';
 import hotelRoutes from './routes/hotel.routes';
+import userRoutes from './routes/user.routes';
 
 dotenv.config();
 
@@ -14,10 +17,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/travel';
 
-// ✅ CORS 設定（可按你前端網址改）
+// ✅ CORS 設定（可根據你前端網址修改）
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://didactic-goggles-g4rrx96x6xgv39vg7-5173.app.github.dev' // GitHub Codespace 前端網址
+  'https://didactic-goggles-g4rrx96x6xgv39vg7-5173.app.github.dev' // GitHub Codespaces 前端網址
 ];
 
 app.use(cors({
@@ -27,7 +30,10 @@ app.use(cors({
 
 app.use(express.json());
 
-// ✅ 連接 MongoDB
+// ✅ 靜態檔案提供（圖片頭像）
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// ✅ MongoDB connect
 mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.error('❌ MongoDB connection error:', err));
@@ -43,16 +49,14 @@ const swaggerSpec = swaggerJsdoc({
   },
   apis: ['./src/routes/*.ts'],
 });
-
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// ✅ 公開路由
-app.use('/api/auth', authRoutes);
+// ✅ API 路由
+app.use('/api/auth', authRoutes);      // 註冊 / 登入
+app.use('/api/hotels', hotelRoutes);   // 酒店 CRUD
+app.use('/api/users', userRoutes);     // 用戶資料 / 頭像 / 名稱
 
-// ✅ 酒店 CRUD 路由（目前無權限保護）
-app.use('/api/hotels', hotelRoutes);
-
-// ✅ 根路由
+// ✅ 健康檢查
 app.get('/', (_req, res) => {
   res.send('🌍 Travel Agency API is running');
 });
