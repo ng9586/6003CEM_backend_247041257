@@ -4,8 +4,8 @@ export interface UserDocument extends Document {
   email: string;
   password: string;
   role: 'user' | 'operator';
-  username?: string;
-  avatarUrl?: string;
+  username: string;
+  avatarUrl: string;
 }
 
 const userSchema = new Schema<UserDocument>({
