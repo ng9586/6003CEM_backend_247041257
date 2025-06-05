@@ -20,8 +20,10 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/travel';
 
 // ✅ CORS 設定（可根據你前端網址修改）
 const allowedOrigins = [
+  'http://localhost:4173',
+  'https://didactic-goggles-g4rrx96x6xgv39vg7-5173.app.github.dev', // GitHub Codespaces 前端網址
+  'https://didactic-goggles-g4rrx96x6xgv39vg7-4173.app.github.dev',
   'http://localhost:5173',
-  'https://didactic-goggles-g4rrx96x6xgv39vg7-5173.app.github.dev' // GitHub Codespaces 前端網址
 ];
 
 app.use(cors({
