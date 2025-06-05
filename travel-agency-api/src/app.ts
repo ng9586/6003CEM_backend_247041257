@@ -10,6 +10,7 @@ import path from 'path';
 import authRoutes from './routes/auth.routes';
 import hotelRoutes from './routes/hotel.routes';
 import userRoutes from './routes/user.routes';
+import bookingRoutes from './routes/booking.routes';
 
 dotenv.config();
 
@@ -55,6 +56,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/auth', authRoutes);      // 註冊 / 登入
 app.use('/api/hotels', hotelRoutes);   // 酒店 CRUD
 app.use('/api/users', userRoutes);     // 用戶資料 / 頭像 / 名稱
+app.use('/api/bookings', bookingRoutes);
 
 // ✅ 健康檢查
 app.get('/', (_req, res) => {
