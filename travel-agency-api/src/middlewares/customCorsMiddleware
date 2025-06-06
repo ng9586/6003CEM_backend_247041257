@@ -1,0 +1,29 @@
+// src/middlewares/customCorsMiddleware.ts
+import { RequestHandler } from 'express';
+
+// 你可以直接在這裡定義 allowedOrigins，或者從 config 檔案 import
+const allowedOrigins = [
+  'https://didactic-goggles-g4rrx96x6xgv39vg7-4173.app.github.dev',
+  // 其他允許的 origin
+];
+
+const customCorsMiddleware: RequestHandler = (req, res, next) => {
+  const origin = req.headers.origin;
+
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+    return;
+  }
+
+  next();
+};
+
+export default customCorsMiddleware;
