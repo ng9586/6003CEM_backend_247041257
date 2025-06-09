@@ -52,7 +52,7 @@ app.use(express.json());
 // 提供 uploads 靜態資源
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-app.use('/api/hotel-api', hotelApiRoutes);
+app.use('/api/hotelApi', hotelApiRoutes);
 
 // 連線 MongoDB
 mongoose.connect(MONGO_URI)
