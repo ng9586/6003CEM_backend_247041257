@@ -8,7 +8,7 @@ import authRoutes from './routes/auth.routes';
 import hotelRoutes from './routes/hotel.routes';
 import userRoutes from './routes/user.routes';
 import bookingRoutes from './routes/booking.routes';
-import hotelbedsRoutes from './routes/hotelbeds.routes';
+import hotelApiRoutes from './routes/hotelApi.routes';
 
 dotenv.config();
 
@@ -52,7 +52,7 @@ app.use(express.json());
 // 提供 uploads 靜態資源
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-app.use('/api/external/hotels', hotelbedsRoutes);
+app.use('/api/hotel-api', hotelApiRoutes);
 
 // 連線 MongoDB
 mongoose.connect(MONGO_URI)
