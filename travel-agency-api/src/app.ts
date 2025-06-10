@@ -19,6 +19,7 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/travel';
 // 設定允許的前端 Origin (包含 Codespaces 動態網址)
 const allowedOrigins = [
   'https://didactic-goggles-g4rrx96x6xgv39vg7-4173.app.github.dev',
+  'https://didactic-goggles-g4rrx96x6xgv39vg7-5173.app.github.dev',
   // 如果你有其他前端網址，也放這度
 ];
 
@@ -52,7 +53,7 @@ app.use(express.json());
 // 提供 uploads 靜態資源
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-app.use('/api/hotelApi', hotelApiRoutes);
+app.use('/api/hotels', hotelApiRoutes);
 
 // 連線 MongoDB
 mongoose.connect(MONGO_URI)

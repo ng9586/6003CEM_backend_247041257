@@ -1,9 +1,23 @@
-import { Router } from 'express';
-import { getAttractionDetail } from '../controllers/hotelApi.controller';
+import express from 'express';
+import {
+  getSurroundingHotels,
+  getRoomList,
+  getRoomListPhoto,
+  autocompleteHotels,
+} from '../controllers/hotelApi.controller';
 
-const router = Router();
+const router = express.Router();
 
-// 範例：GET /api/hotel-api/attraction/detail?slug=xxxx
-router.get('/attraction/detail', getAttractionDetail);
+// 取得周邊飯店
+router.get('/surrounding-hotels', getSurroundingHotels);
+
+// 取得飯店房型列表
+router.get('/room-list', getRoomList);
+
+// 取得房型照片
+router.get('/room-list-photo', getRoomListPhoto);
+
+// 飯店自動完成搜尋
+router.get('/autocomplete', autocompleteHotels);
 
 export default router;
