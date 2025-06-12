@@ -1,23 +1,9 @@
 import express from 'express';
-import {
-  getSurroundingHotels,
-  getRoomList,
-  getRoomListPhoto,
-  autocompleteHotels,
-} from '../controllers/hotelApi.controller';
+import { getHotelDetails, searchHotels } from '../controllers/hotelApi.controller';
 
 const router = express.Router();
 
-// 取得周邊飯店
-router.get('/surrounding-hotels', getSurroundingHotels);
-
-// 取得飯店房型列表
-router.get('/room-list', getRoomList);
-
-// 取得房型照片
-router.get('/room-list-photo', getRoomListPhoto);
-
-// 飯店自動完成搜尋
-router.get('/autocomplete', autocompleteHotels);
+router.get('/hotel-details', getHotelDetails); // e.g. /api/hotel/hotel-details?hotelCode=123
+router.get('/search', searchHotels); // e.g. /api/hotel/search?destinationCode=PMI&checkIn=2025-07-01&checkOut=2025-07-03&adults=2
 
 export default router;

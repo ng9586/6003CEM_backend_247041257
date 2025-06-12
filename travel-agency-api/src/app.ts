@@ -5,7 +5,6 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 import authRoutes from './routes/auth.routes';
-import hotelRoutes from './routes/hotel.routes';
 import userRoutes from './routes/user.routes';
 import bookingRoutes from './routes/booking.routes';
 import hotelApiRoutes from './routes/hotelApi.routes';
@@ -62,7 +61,7 @@ mongoose.connect(MONGO_URI)
 
 // 路由設定
 app.use('/api/auth', authRoutes);
-app.use('/api/hotels', hotelRoutes);
+app.use('/api/hotels', hotelApiRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/bookings', bookingRoutes);
 
