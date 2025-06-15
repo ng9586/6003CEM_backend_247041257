@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import bookingRoutes from './routes/booking.routes';
 import hotelApiRoutes from './routes/hotelApi.routes';
+import hotelRoutes from './routes/hotelRoutes';
 
 dotenv.config();
 
@@ -52,6 +53,9 @@ app.use(express.json());
 
 // 提供 uploads 靜態資源
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// 自己資料庫酒店 CRUD 路由
+app.use('/api/hotels', hotelRoutes);
 
 app.use('/api/hotels', hotelApiRoutes);
 
