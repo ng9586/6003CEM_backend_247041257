@@ -3,6 +3,7 @@ import { RequestHandler } from 'express';
 
 // 你可以直接在這裡定義 allowedOrigins，或者從 config 檔案 import
 const allowedOrigins = [
+  'http://127.0.0.1:4173',
   'https://didactic-goggles-g4rrx96x6xgv39vg7-4173.app.github.dev',
   'https://didactic-goggles-g4rrx96x6xgv39vg7-5173.app.github.dev',
   // 其他允許的 origin

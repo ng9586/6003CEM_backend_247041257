@@ -17,6 +17,7 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/travel';
 
 // 設定允許的前端 Origin (包含 Codespaces 動態網址)
 const allowedOrigins = [
+  'http://127.0.0.1:4173',
   'https://didactic-goggles-g4rrx96x6xgv39vg7-4173.app.github.dev',
   'https://didactic-goggles-g4rrx96x6xgv39vg7-5173.app.github.dev',
   // 如果你有其他前端網址，也放這度
@@ -82,5 +83,5 @@ app.use(corsErrorHandler);
 
 // 啟動 Server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running on http://127.0.0.1:${PORT}`);
 });
