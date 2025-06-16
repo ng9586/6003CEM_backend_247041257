@@ -8,7 +8,7 @@ import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import bookingRoutes from './routes/booking.routes';
 import hotelApiRoutes from './routes/hotelApi.routes';
-import hotelRoutes from './routes/hotelRoutes';
+import hotelRoutes from './routes/localHotel.routes';
 
 dotenv.config();
 
@@ -69,6 +69,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/hotels', hotelApiRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/localHotels', hotelRoutes);
 
 // 健康檢查
 app.get('/', (_req, res) => {

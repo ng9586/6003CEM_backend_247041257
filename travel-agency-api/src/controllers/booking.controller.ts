@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { Booking } from '../models/booking.model';
-import { Hotel } from '../models/hotel.model';
+import { LocalHotel } from '../models/localHotel.model';
 
 export const createBooking = async (req: Request, res: Response): Promise<void> => {
   const userId = req.user?.userId;
   const { hotelId, checkInDate } = req.body;
 
   try {
-    const hotel = await Hotel.findById(hotelId);
+    const hotel = await LocalHotel.findById(hotelId);
     if (!hotel) {
       res.status(404).json({ message: '找不到酒店' });
       return;

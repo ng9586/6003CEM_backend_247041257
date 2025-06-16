@@ -1,14 +1,14 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-export interface HotelDocument extends Document {
+export interface LocalHotelDocument extends Document {
   name: string;
   location: string;
   price: number;
   description?: string;
-  imageFilename?: string;  // 圖片檔名
+  imageFilename?: string;
 }
 
-const hotelSchema = new Schema<HotelDocument>({
+const localHotelSchema = new Schema<LocalHotelDocument>({
   name: { type: String, required: true },
   location: { type: String, required: true },
   price: { type: Number, required: true },
@@ -16,4 +16,4 @@ const hotelSchema = new Schema<HotelDocument>({
   imageFilename: { type: String },
 });
 
-export const Hotel = mongoose.model<HotelDocument>('Hotel', hotelSchema);
+export const LocalHotel = mongoose.model<LocalHotelDocument>('LocalHotel', localHotelSchema);
