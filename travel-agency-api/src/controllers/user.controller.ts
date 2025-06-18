@@ -1,19 +1,24 @@
 import { Request, Response } from 'express';
 import { User } from '../models/user.model';
 
-// ✅ 取得用戶資料
+// ✅ 取得用戶資料（包含收藏酒店）
 export const getProfile = async (req: Request, res: Response): Promise<void> => {
   try {
-    const user = await User.findById(req.user?.userId).select('-password');
+    const user = await User.findById(req.user?.userId)
+      .select('-password')
+      .populate('favoritedHotels'); // 加入收藏酒店詳細資料
+
     if (!user) {
       res.status(404).json({ message: 'User not found' });
       return;
     }
+
     res.json({
       email: user.email,
       username: user.username,
       avatarUrl: user.avatarUrl,
       role: user.role,
+      favoritedHotels: user.favoritedHotels, // 回傳收藏列表
     });
   } catch (error) {
     console.error('[GetProfile Error]', error);
@@ -61,7 +66,7 @@ export const updateAvatar = async (req: Request, res: Response): Promise<void> =
   }
 
   try {
-    const avatarUrl = `/uploads/${req.file.filename}`; // ✅ 建議統一使用 avatarUrl
+    const avatarUrl = `/uploads/${req.file.filename}`;
 
     const user = await User.findByIdAndUpdate(
       req.user?.userId,
