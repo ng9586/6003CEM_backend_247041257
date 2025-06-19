@@ -8,10 +8,10 @@ const router = express.Router();
 // 新增留言
 router.post('/', authMiddleware, async (req, res) => {
   try {
-    const { hotelId, comment, rating } = req.body;
+    const { hotelId, comment, rating, hotelSource } = req.body;
     const userId = req.user?.userId;
 
-    if (!hotelId || !comment || !rating) {
+    if (!hotelId || !comment || !rating || !hotelSource) {
       res.status(400).json({ message: '缺少必要欄位' });
       return;
     }
@@ -26,7 +26,7 @@ router.post('/', authMiddleware, async (req, res) => {
       return;
     }
 
-    const review = new Review({ hotelId, userId, comment, rating });
+    const review = new Review({ hotelId, hotelSource, userId, comment, rating });
     await review.save();
 
     res.status(201).json({ message: '留言成功' });
@@ -40,7 +40,22 @@ router.post('/', authMiddleware, async (req, res) => {
 router.get('/localHotels/:hotelId', async (req, res) => {
   try {
     const { hotelId } = req.params;
-    const reviews = await Review.find({ hotelId })
+    const reviews = await Review.find({ hotelId, hotelSource: 'local' })
+      .populate('userId', 'username')
+      .sort({ createdAt: -1 });
+
+    res.json(reviews);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: '伺服器錯誤' });
+  }
+});
+
+// 取得指定 externalHotel 留言（公開）
+router.get('/externalHotels/:hotelId', async (req, res) => {
+  try {
+    const { hotelId } = req.params;
+    const reviews = await Review.find({ hotelId, hotelSource: 'external' })
       .populate('userId', 'username')
       .sort({ createdAt: -1 });
 

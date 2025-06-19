@@ -166,7 +166,7 @@ export const searchHotelsWithImages = async (req: Request, res: Response): Promi
     const rawHotels = searchResponse.data.hotels?.hotels || [];
 
     const hotelsWithImages = await Promise.all(
-      rawHotels.slice(0, 3).map(async (hotel: any) => {
+      rawHotels.slice(0, 5).map(async (hotel: any) => {
         try {
           const detailRes = await axios.get(`${HOTELBEDS_CONTENT_API}/hotels/${hotel.code}`, {
             headers: {
