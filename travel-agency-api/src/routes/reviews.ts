@@ -1,14 +1,20 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import Review from '../models/Review';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { containsBadWords } from '../utils';
 
 const router = express.Router();
 
+// Helper: 判斷並轉換 hotelId 格式
+function parseHotelId(hotelId: string) {
+  return mongoose.Types.ObjectId.isValid(hotelId) ? new mongoose.Types.ObjectId(hotelId) : hotelId;
+}
+
 // 新增留言
 router.post('/', authMiddleware, async (req, res) => {
   try {
-    const { hotelId, comment, rating, hotelSource } = req.body;
+    let { hotelId, comment, rating, hotelSource } = req.body;
     const userId = req.user?.userId;
 
     if (!hotelId || !comment || !rating || !hotelSource) {
@@ -26,6 +32,8 @@ router.post('/', authMiddleware, async (req, res) => {
       return;
     }
 
+    hotelId = parseHotelId(hotelId);
+
     const review = new Review({ hotelId, hotelSource, userId, comment, rating });
     await review.save();
 
@@ -39,7 +47,8 @@ router.post('/', authMiddleware, async (req, res) => {
 // 取得指定 localHotel 留言（公開）
 router.get('/localHotels/:hotelId', async (req, res) => {
   try {
-    const { hotelId } = req.params;
+    const hotelId = parseHotelId(req.params.hotelId);
+
     const reviews = await Review.find({ hotelId, hotelSource: 'local' })
       .populate('userId', 'username')
       .sort({ createdAt: -1 });
@@ -54,7 +63,8 @@ router.get('/localHotels/:hotelId', async (req, res) => {
 // 取得指定 externalHotel 留言（公開）
 router.get('/externalHotels/:hotelId', async (req, res) => {
   try {
-    const { hotelId } = req.params;
+    const hotelId = parseHotelId(req.params.hotelId);
+
     const reviews = await Review.find({ hotelId, hotelSource: 'external' })
       .populate('userId', 'username')
       .sort({ createdAt: -1 });
